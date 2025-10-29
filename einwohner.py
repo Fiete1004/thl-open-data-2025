@@ -1,18 +1,19 @@
 from urllib.error import URLError
 
-import altair as alt
-import pandas as pd
+import altair as alt    #import der versch. libaries
+import pandas as pd     #geben eines kürzels, für späteren zugriff
 import streamlit as st
 
-
+#die daten aus der csv datei werden importiert und mit einer variable versehen. Hier "df" 
+#Pandas Funktion -> Read -> Trennungszeichen festlegen (sep="..") 
 @st.cache_data
-def get_data():
+def get_data():     # 'def' ist eine definition
     df = pd.read_csv(
         "https://opendata.luebeck.de/bereich/1.102/statistik/bevoelkerung/"
         "einwohner-stadtteile/einwohner-stadtteile.csv",
         sep=";",
     )
-
+#Umwandlung der Textfelder einerseits in Datum, andererseits in eine einfache Zahl
     df = df.set_index("stadtteil_name")
     df["stichtag"] = pd.to_datetime(df["stichtag"])
     df["einwohner"] = pd.to_numeric(df["einwohner"])
@@ -29,9 +30,9 @@ try:
     )
 
     if not stadtteile:
-        st.error("Wähle mindestens einen Stadtteil")
+        st.error("Wähle mindestens einen Stadtteil, du Hund!")
     else:
-        df = df.loc[stadtteile]
+        df = df.loc[stadtteile]     #Hier wird gefiltert 
         df = df.reset_index()
 
         chart = (
